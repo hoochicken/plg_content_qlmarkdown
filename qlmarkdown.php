@@ -202,9 +202,9 @@ class plgContentQlmarkdown extends JPlugin
      * @internal param $text
      */
     private function parseArticle($parser, &$objArticle) {
-        if (isset($objArticle->text)) $objArticle->text = $this->parse($this->parser, $objArticle->text);
-        if (isset($objArticle->introtext)) $objArticle->introtext = $this->parse($this->parser, $objArticle->introtext);
-        if (isset($objArticle->fulltext)) $objArticle->fulltext = $this->parse($this->parser, $objArticle->fulltext);
+        if (isset($objArticle->text)) $objArticle->text = $this->parse($parser, $objArticle->text);
+        if (isset($objArticle->introtext)) $objArticle->introtext = $this->parse($parser, $objArticle->introtext);
+        if (isset($objArticle->fulltext)) $objArticle->fulltext = $this->parse($parser, $objArticle->fulltext);
 
     }
 
