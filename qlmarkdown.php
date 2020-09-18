@@ -8,6 +8,7 @@
 
 //no direct access
 use Michelf\Markdown;
+use Michelf\MarkdownExtra;
 
 defined('_JEXEC') or die ('Restricted Access');
 
@@ -65,6 +66,7 @@ class plgContentQlmarkdown extends JPlugin
 
         if ($this->checkGlobal($objArticle)) {
             $this->parseArticle($this->parser, $objArticle);
+            $this->stripUselessTagsInArticle($this->arrAttributesAvailable, $objArticle);
             return true;
         }
 
@@ -323,9 +325,7 @@ class plgContentQlmarkdown extends JPlugin
      */
     private function getAttributes($arrAttributesAvailable, $string)
     {
-        $strSelector = implode('|', $arrAttributesAvailable);
-        preg_match_all('~(' . $strSelector . ')="(.+?)"~s', $string, $arrMatches);
-        // $arrMatches = $this->filterTags($arrAttributesAvailable, $string);
+        $arrMatches = $this->filterStartTags($arrAttributesAvailable, $string);
         $arrAttributes = [];
         if (is_array($arrMatches)) {
             foreach ($arrMatches[0] as $k => $v) {
@@ -340,10 +340,38 @@ class plgContentQlmarkdown extends JPlugin
     /**
      * method to get attributes
      * @param $arrAttributesAvailable
+     * @param $objArticle
+     */
+    private function stripUselessTagsInArticle($arrAttributesAvailable, &$objArticle)
+    {
+        $strSelector = implode('|', $arrAttributesAvailable);
+
+        if (isset($objArticle->text)) {
+            $objArticle->text = str_replace('{qlmarkdown}', '', $objArticle->text);
+            $objArticle->text = preg_replace('~(' . $strSelector . ')="(.+?)"~s', '', $objArticle->text);
+            $objArticle->text = str_replace('{' . $this->strCallEnd . '}', '', $objArticle->text);
+        }
+
+        if (isset($objArticle->fulltext)) {
+            $objArticle->fulltext = str_replace('{qlmarkdown}', '', $objArticle->fulltext);
+            preg_replace('~(' . $strSelector . ')="(.+?)"~s', '', $objArticle->fulltext);
+            str_replace('{' . $this->strCallEnd . '}', '', $objArticle->fulltext);
+        }
+
+        if (isset($objArticle->introtext)) {
+            $objArticle->introtext = str_replace('{qlmarkdown}', '', $objArticle->introtext);
+            $objArticle->introtext = preg_replace('~({qlmarkdown (' . $strSelector . ')="(.+?)"})}~s', '', $objArticle->introtext);
+            $objArticle->introtext = str_replace('{' . $this->strCallEnd . '}', '', $objArticle->introtext);
+        }
+    }
+
+    /**
+     * method to get attributes
+     * @param $arrAttributesAvailable
      * @param $string
      * @return array
      */
-    private function filterTags($arrAttributesAvailable, $string)
+    private function filterStartTags($arrAttributesAvailable, $string)
     {
         $strSelector = implode('|', $arrAttributesAvailable);
         preg_match_all('~(' . $strSelector . ')="(.+?)"~s', $string, $arrMatches);
