@@ -13,6 +13,7 @@
         <filename plugin="qlmarkdown">qlmarkdown.php</filename>
         <filename plugin="qlmarkdown">index.html</filename>
         <filename plugin="qlmarkdown">license.txt</filename>
+        <folder plugin="qlmarkdown">vendor</folder>
         <folder plugin="qlmarkdown">css</folder>
         <folder plugin="qlmarkdown">tmpl</folder>
         <folder plugin="qlmarkdown">js</folder>
