@@ -76,7 +76,7 @@ class plgContentQlmarkdown extends JPlugin
         $this->clearTagsInArticle($objArticle);
 
         //replace tags
-        $this->replaceStartTagsInArticle($objArticle->text);
+        $this->replaceStartTagsInArticle($objArticle);
     }
 
     /**
