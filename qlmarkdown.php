@@ -7,6 +7,8 @@
  */
 
 //no direct access
+use Michelf\Markdown;
+
 defined('_JEXEC') or die ('Restricted Access');
 
 jimport('joomla.plugin.plugin');
@@ -50,6 +52,8 @@ class plgContentQlmarkdown extends JPlugin
         if (false === strpos($objArticle->text, '{' . $this->strCallStart) && false === strpos($objArticle->text, '{' . $this->strCallEnd . '}')) {
             return true;
         }
+
+        require_once 'vendor/autoload.php';
 
         // if
         if (1 == $this->params->get('global', 0) && false === strpos($objArticle->text, $this->offTag)) {
@@ -98,7 +102,13 @@ class plgContentQlmarkdown extends JPlugin
         foreach ($complete as $numKey => $strContent) {
             //get replacement array (written to class variable)
             $this->arrReplace[$numKey] = $this->getAttributes($this->arrAttributesAvailable, $attributes[$numKey]);
-            $this->arrReplace[$numKey]['content'] = $this->parse($this->parser, $content[$numKey]);
+            $text = $this->parse($this->parser, $content[$numKey]);
+
+            // for reasons obsolutely obscure, SOME tags are turned into html &lg; while others are NOT. something's rotten here ...
+            $text = str_replace('&lt;', '<', $text);
+            $text = str_replace('&gt;', '>', $text);
+
+            $this->arrReplace[$numKey]['content'] = $text;
 
             //get html code
             $this->arrReplace[$numKey]['html'] = $this->getHtml($numKey, $this->arrReplace[$numKey]);
@@ -124,7 +134,8 @@ class plgContentQlmarkdown extends JPlugin
     {
         switch($parser) {
             case 'wikipedia-api-post':
-                $text = $this->parseWikipediaApiPost($text);
+                $endPoint = $this->params->get('api-endpoint', "https://en.wikipedia.org/w/api.php");
+                $text = $this->parseWikipediaApiPost($endPoint, $text);
                 break;
             case 'michelf-php-markdown':
                 $text = $this->parseMichelfPhpMarkdown($text);
@@ -134,54 +145,78 @@ class plgContentQlmarkdown extends JPlugin
                 break;
             case 'erusev-parsedown':
             default:
-            $text = $this->parseErusevParsedown($text);
-                ;
+                $text = $this->parseErusevParsedown($text);
         }
         return $text;
     }
 
     /**
      * parses markdown string as html
-     * @param string $strText
+     * @param $endPoint
+     * @param string $text
      * @return mixed
      * @internal param $text
      */
-    private function parseWikipediaApiPost($strText = '')
+    private function parseWikipediaApiPost($endPoint, $text = '')
     {
-        return $strText;
+        $params = [
+            "action" => "parse",
+            "text" => $text,
+            "format" => "json"
+        ];
+
+        $ch = curl_init();
+
+        curl_setopt( $ch, CURLOPT_URL, $endPoint );
+        curl_setopt( $ch, CURLOPT_POST, true );
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, http_build_query( $params ) );
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+
+        $output = curl_exec( $ch );
+        curl_close( $ch );
+
+        $obj =  json_decode( $output );
+        $text = isset($obj->parse->text->{'*'}) ? $obj->parse->text->{'*'} : $text;
+        return $text;
     }
 
     /**
      * parses markdown string as html
-     * @param string $strText
+     * @param string $text
      * @return mixed
      * @internal param $text
      */
-    private function parseMichelfPhpMarkdown($strText = '')
+    private function parseMichelfPhpMarkdown($text = '')
     {
-        return $strText;
+        $text = strip_tags($text);
+        $text = Markdown::defaultTransform($text);
+        return $text;
     }
 
     /**
      * parses markdown string as html
-     * @param string $strText
+     * @param string $text
      * @return mixed
      * @internal param $text
      */
-    private function parseMichelfPhpMarkdownExtra($strText = '')
+    private function parseMichelfPhpMarkdownExtra($text = '')
     {
-        return $strText;
+        $text = strip_tags($text);
+        $text = MarkdownExtra::defaultTransform($text);
+        return $text;
     }
 
     /**
      * parses markdown string as html
-     * @param string $strText
+     * @param string $text
      * @return mixed
      * @internal param $text
      */
-    private function parseErusevParsedown($strText = '')
+    private function parseErusevParsedown($text = '')
     {
-        return $strText;
+        $Parsedown = new Parsedown();
+        $text = $Parsedown->text(strip_tags($text));
+        return $text;
     }
 
     /**
