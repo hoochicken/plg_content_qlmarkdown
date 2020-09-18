@@ -49,7 +49,6 @@ class plgContentQlmarkdown extends JPlugin
         $this->boolDebug = $input->getBool('ql_content_debug', false);
 
         //if no plg tag in article => ignore
-        if ($this->checkGlobal($objArticle)) echo 'global';
         if (!$this->tagExistsInArticle($objArticle) && !$this->checkGlobal($objArticle)) {
             $this->clearOffTagsInArticle($objArticle)($objArticle);
             return true;
