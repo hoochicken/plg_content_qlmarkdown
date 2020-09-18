@@ -148,6 +148,18 @@
                     <option value="dashed">PLG_CONTENT_QLMARKDOWN_BORDERTYPE_DASHED</option>
                 </field>
             </fieldset>
+            <fieldset name="context">
+                <field name="contextWhitelist" type="textarea"
+                       label="PLG_CONTENT_QLMARKDOWN_CONTEXTWHITELIST_LABEL"
+                       description="PLG_CONTENT_QLMARKDOWN_CONTEXTWHITELIST_DESC"
+                       hint="mod_custom.content com_content.article"
+                />
+                <field name="contextBlacklist" type="textarea"
+                       label="PLG_CONTENT_QLMARKDOWN_CONTEXTBLACKLIST_LABEL"
+                       description="PLG_CONTENT_QLMARKDOWN_CONTEXTBLACKLIST_DESC"
+                       hint="mod_custom.content com_content.article"
+                />
+            </fieldset>
         </fields>
     </config>
 </extension>

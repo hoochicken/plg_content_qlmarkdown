@@ -37,10 +37,7 @@ class plgContentQlmarkdown extends JPlugin
      */
     public function onContentPrepare($strContext, &$objArticle, &$objParams, $numPage = 0)
     {
-        //if search => ignore
-        if ('com_finder.indexer' === $strContext) {
-            return true;
-        }
+        if (!$this->checkContext($strContext)) return true;
 
         $this->offTag = '{' . $this->strCallStart . '-off}';
         $this->parser = $this->params->get('parser', 'erusev-parsedown');
@@ -76,6 +73,24 @@ class plgContentQlmarkdown extends JPlugin
 
         //replace tags
         $this->replaceStartTagsInArticle($objArticle->text);
+    }
+
+    /**
+     * replaces placeholder tags {qlmarkdown ...} with actual html code
+     * @param $context
+     * @return mixed
+     * @internal param $text
+     */
+    private function checkContext($context)
+    {
+        //if search => ignore
+        if ('com_finder.indexer' === $context) return false;
+        $whitelist = $this->params->get('contextWhitelist', '');
+        $blacklist = $this->params->get('contextBlacklist', '');
+        if (!empty($blacklist) && false !== strpos($blacklist, $context)) return false;
+        if (!empty($whitelist) && false === strpos($whitelist, $context)) return false;
+
+        return true;
     }
 
     /**
@@ -311,6 +326,7 @@ class plgContentQlmarkdown extends JPlugin
     {
         $strSelector = implode('|', $arrAttributesAvailable);
         preg_match_all('~(' . $strSelector . ')="(.+?)"~s', $string, $arrMatches);
+        // $arrMatches = $this->filterTags($arrAttributesAvailable, $string);
         $arrAttributes = [];
         if (is_array($arrMatches)) {
             foreach ($arrMatches[0] as $k => $v) {
@@ -320,6 +336,19 @@ class plgContentQlmarkdown extends JPlugin
             }
         }
         return $arrAttributes;
+    }
+
+    /**
+     * method to get attributes
+     * @param $arrAttributesAvailable
+     * @param $string
+     * @return array
+     */
+    private function filterTags($arrAttributesAvailable, $string)
+    {
+        $strSelector = implode('|', $arrAttributesAvailable);
+        preg_match_all('~(' . $strSelector . ')="(.+?)"~s', $string, $arrMatches);
+        return $arrMatches;
     }
 
     /**
