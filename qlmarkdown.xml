@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" version="3.9.10" group="content" method="upgrade">
+    <name>PLG_CONTENT_QLMARKDOWN</name>
+    <author>Mareike Riegel</author>
+    <creationDate>September 2020</creationDate>
+    <copyright>Copyright (C) 2020 ql.de All rights reserved.</copyright>
+    <authorEmail>mareike.riegel@ql.de</authorEmail>
+    <authorUrl>http://ql.de/</authorUrl>
+    <version>1.0.0</version>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <description>PLG_CONTENT_QLMARKDOWN_DESCRIPTION</description>
+    <files>
+        <filename plugin="qlmarkdown">qlmarkdown.php</filename>
+        <filename plugin="qlmarkdown">index.html</filename>
+        <filename plugin="qlmarkdown">license.txt</filename>
+        <folder plugin="qlmarkdown">css</folder>
+        <folder plugin="qlmarkdown">tmpl</folder>
+        <folder plugin="qlmarkdown">js</folder>
+        <folder plugin="qlmarkdown">language</folder>
+        <folder plugin="qlmarkdown">php</folder>
+    </files>
+    <languages>
+        <language tag="en-GB">language/en-GB/en-GB.plg_content_qlmarkdown.ini</language>
+        <language tag="en-GB">language/en-GB/en-GB.plg_content_qlmarkdown.sys.ini</language>
+    </languages>
+    <media folder="media" destination="plg_content_qlmarkdown">
+        <folder>css</folder>
+        <folder>js</folder>
+    </media>
+    <updateservers>
+        <server type="extension" priority="1" name="qlmarkdown - Updates"><![CDATA[https://www.blackforest-software.com/_scripts/updates/plg_content_qlmarkdown.xml]]></server>
+    </updateservers>
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                 <field name="parser" type="radio"
+                       class="btn-group"
+                       default="0"
+                       label="PLG_CONTENT_QLMARKDOWN_PARSER_LABEL"
+                        description="PLG_CONTENT_QLMARKDOWN_PARSER_DESC"
+                 >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field name="parser" type="list"
+                       description="PLG_CONTENT_QLMARKDOWN_PARSER_DESC"
+                       label="PLG_CONTENT_QLMARKDOWN_PARSER_LABEL"
+                       required="true"
+                        >
+                    <option value="">PLG_CONTENT_QLMARKDOWN_CHOOSE</option>
+                    <option value="wikipedia-api-post">Wikipedia API - (post)</option>
+                    <option value="erusev-parsedown">erusev/parsedown</option>
+                    <option value="michelf-php-markdown">michelf/php-markdown</option>
+                    <option value="michelf-php-markdown-extra">michelf/php-markdown (extra)</option>
+                </field>
+                <field name="global" type="radio"
+                       class="btn-group"
+                       default="0"
+                       label="PLG_CONTENT_QLMARKDOWN_GLOBAL_LABEL"
+                       description="PLG_CONTENT_QLMARKDOWN_GLOBAL_DESC"
+                >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field name="jquery" type="radio"
+                       class="btn-group"
+                       default="0"
+                       label="PLG_CONTENT_QLMARKDOWN_JQUERY_LABEL"
+                       description="PLG_CONTENT_QLMARKDOWN_JQUERY_DESC"
+                >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field name="layout" type="text" default="default"
+                       label="PLG_CONTENT_QLMARKDOWN_LAYOUT_LABEL"
+                       description="PLG_CONTENT_QLMARKDOWN_LAYOUT_DESC" />
+            </fieldset>
+            <fieldset name="styles">
+                <field name="styleDefault" type="radio"
+                       class="btn-group"
+                       default="0"
+                       label="PLG_CONTENT_QLMARKDOWN_STYLEDEFAULT_LABEL"
+                       description="PLG_CONTENT_QLMARKDOWN_STYLEDEFAULT_DESC"
+                >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field name="style" type="radio"
+                       class="btn-group"
+                       default="0"
+                       label="PLG_CONTENT_QLMARKDOWN_STYLE_LABEL"
+                       description="PLG_CONTENT_QLMARKDOWN_STYLE_DESC"
+                >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field name="backgroundcolor" type="color"
+                       default="#f4f4f4"
+                       label="PLG_CONTENT_QLMARKDOWN_BACKGROUNDCOLOR_LABEL"
+                       description="PLG_CONTENT_QLMARKDOWN_BACKGROUNDCOLOR_DESC"
+                />
+                <field name="backgroundopacity" type="integer"
+                       default="100"
+                       step="1"
+                       first="0"
+                       last="100"
+                       description="PLG_CONTENT_QLMARKDOWN_BACKGROUNDOPACITY_DESC"
+                       label="PLG_CONTENT_QLMARKDOWN_BACKGROUNDOPACITY_LABEL"
+                />
+                <field name="fontcolor" type="color"
+                       default="#666666"
+                       label="PLG_CONTENT_QLMARKDOWN_FONTCOLOR_LABEL"
+                       description="PLG_CONTENT_QLMARKDOWN_FONTCOLOR_DESC"
+                />
+
+                <field name="bordercolor" type="color"
+                       default="#cdcdcd"
+                       label="PLG_CONTENT_QLMARKDOWN_BORDERCOLOR_LABEL"
+                       description="PLG_CONTENT_QLMARKDOWN_BORDERCOLOR_DESC"
+                />
+                <field name="padding" type="integer"
+                       default="1"
+                       first="0"
+                       last="50"
+                       step="1"
+                       label="PLG_CONTENT_QLMARKDOWN_PADDING_LABEL"
+                       description="PLG_CONTENT_QLMARKDOWN_PADDING_DESC"
+                />
+                <field name="borderwidth" type="integer"
+                       default="1"
+                       first="0"
+                       last="20"
+                       step="1"
+                       label="PLG_CONTENT_QLMARKDOWN_BORDERWIDTH_LABEL"
+                       description="PLG_CONTENT_QLMARKDOWN_BORDERWIDTH_DESC"
+                />
+                <field name="bordertype" type="list"
+                       default="1"
+                       label="PLG_CONTENT_QLMARKDOWN_BORDERTYPE_LABEL"
+                       description="PLG_CONTENT_QLMARKDOWN_BORDERTYPE_DESC"
+                >
+                    <option value="solid">PLG_CONTENT_QLMARKDOWN_BORDERTYPE_SOLID</option>
+                    <option value="dotted">PLG_CONTENT_QLMARKDOWN_BORDERTYPE_DOTTED</option>
+                    <option value="dashed">PLG_CONTENT_QLMARKDOWN_BORDERTYPE_DASHED</option>
+                </field>
+            </fieldset>
+        </fields>
+    </config>
+</extension>
