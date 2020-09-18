@@ -481,7 +481,6 @@ class plgContentQlmarkdown extends JPlugin
         $strPathLayout = JPluginHelper::getLayoutPath($extType, $extName, $strLayoutFile);
         if (!file_exists($strPathLayout)) {
             $strPathLayout = JPluginHelper::getLayoutPath($extType, $extName, 'default');
-            die($strPathLayout);
         }
         return $strPathLayout;
     }
