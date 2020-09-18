@@ -1,1 +1,0 @@
-# plg_content_qlmarkdown
