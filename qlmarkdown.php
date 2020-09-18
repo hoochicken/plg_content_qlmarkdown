@@ -48,9 +48,11 @@ class plgContentQlmarkdown extends JPlugin
 
         //if no plg tag in article => ignore
         if (!$this->tagExistsInArticle($objArticle) && !$this->checkGlobal($objArticle)) {
-            $this->clearOffTagsInArticle($objArticle)($objArticle);
+            $this->clearOffTagsInArticle($objArticle);
             return true;
         }
+
+        $this->clearOffTagsInArticle($objArticle);
 
         require_once 'vendor/autoload.php';
 
