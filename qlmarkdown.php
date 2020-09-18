@@ -205,7 +205,6 @@ class plgContentQlmarkdown extends JPlugin
         if (isset($objArticle->text)) $objArticle->text = $this->parse($parser, $objArticle->text);
         if (isset($objArticle->introtext)) $objArticle->introtext = $this->parse($parser, $objArticle->introtext);
         if (isset($objArticle->fulltext)) $objArticle->fulltext = $this->parse($parser, $objArticle->fulltext);
-
     }
 
     /**
