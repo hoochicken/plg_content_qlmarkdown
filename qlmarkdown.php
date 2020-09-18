@@ -49,16 +49,13 @@ class plgContentQlmarkdown extends JPlugin
         $this->boolDebug = $input->getBool('ql_content_debug', false);
 
         //if no plg tag in article => ignore
-        if (false === strpos($objArticle->text, '{' . $this->strCallStart) && false === strpos($objArticle->text, '{' . $this->strCallEnd . '}')) {
+        if ($this->checkGlobal($objArticle)) echo 'global';
+        if (!$this->tagExistsInArticle($objArticle) && !$this->checkGlobal($objArticle)) {
+            $this->clearOffTagsInArticle($objArticle)($objArticle);
             return true;
         }
 
         require_once 'vendor/autoload.php';
-
-        // if
-        if (1 == $this->params->get('global', 0) && false === strpos($objArticle->text, $this->offTag)) {
-            $objArticle->text = $this->parse($this->parser, $objArticle->text);
-        }
 
         // check session if styles already loaded
         $boolAlreadyLoadedStyles = defined('qlmarkdown_styles');
@@ -70,11 +67,71 @@ class plgContentQlmarkdown extends JPlugin
             define('qlmarkdown_styles', true);
         }
 
+        if ($this->checkGlobal($objArticle)) {
+            $this->parseArticle($this->parser, $objArticle);
+            return true;
+        }
+
         //clear tags, tries to avoid code like <p><div> etc.
-        $objArticle->text = $this->clearTags($objArticle->text);
+        $this->clearTagsInArticle($objArticle);
 
         //replace tags
-        $objArticle->text = $this->replaceStartTags($objArticle->text);
+        $this->replaceStartTagsInArticle($objArticle->text);
+    }
+
+    /**
+     * replaces placeholder tags {qlmarkdown ...} with actual html code
+     * @param $objArticle
+     * @return mixed
+     * @internal param $text
+     */
+    private function tagExistsInArticle($objArticle)
+    {
+        if (isset($objArticle->text) && $this->tagExists($objArticle->text)) return true;
+        if (isset($objArticle->introtext) && $this->tagExists($objArticle->introtext)) return true;
+        if (isset($objArticle->fulltext) && $this->tagExists($objArticle->fulltext)) return true;
+        return false;
+    }
+
+    /**
+     * replaces placeholder tags {qlmarkdown ...} with actual html code
+     * @param $objArticle
+     * @return mixed
+     * @internal param $text
+     */
+    private function checkGlobal($objArticle)
+    {
+        if (0 == $this->params->get('global', 0)) return false;
+
+        if (isset($objArticle->text) && false === strpos($objArticle->text, $this->offTag)) return true;
+        if (isset($objArticle->introtext) && false === strpos($objArticle->introtext, $this->offTag)) return true;
+        if (isset($objArticle->fulltext) && false === strpos($objArticle->fulltext, $this->offTag)) return true;
+        return false;
+    }
+
+    /**
+     * replaces placeholder tags {qlmarkdown ...} with actual html code
+     * @param $string
+     * @return mixed
+     * @internal param $text
+     */
+    private function tagExists($string = '')
+    {
+        $return = false;
+        if (false !== strpos($string, '{' . $this->strCallStart) && false !== strpos($string, '{' . $this->strCallEnd . '}')) $return = true;
+        return $return;
+    }
+
+    /**
+     * replaces placeholder tags {qlmarkdown ...} with actual html code
+     * @param $objArticle
+     * @return mixed
+     * @internal param $text
+     */
+    private function replaceStartTagsInArticle(&$objArticle) {
+        if (isset($objArticle->text)) $objArticle->text = $this->replaceStartTags($objArticle->text);
+        if (isset($objArticle->introtext)) $objArticle->introtext = $this->replaceStartTags($objArticle->introtext);
+        if (isset($objArticle->fulltext)) $objArticle->fulltext = $this->replaceStartTags($objArticle->fulltext);
     }
 
     /**
@@ -126,13 +183,27 @@ class plgContentQlmarkdown extends JPlugin
     /**
      * parses markdown string as html
      * @param $parser
+     * @param $objArticle
+     * @return mixed
+     * @internal param $text
+     */
+    private function parseArticle($parser, &$objArticle) {
+        if (isset($objArticle->text)) $objArticle->text = $this->parse($this->parser, $objArticle->text);
+        if (isset($objArticle->introtext)) $objArticle->introtext = $this->parse($this->parser, $objArticle->introtext);
+        if (isset($objArticle->fulltext)) $objArticle->fulltext = $this->parse($this->parser, $objArticle->fulltext);
+
+    }
+
+    /**
+     * parses markdown string as html
+     * @param $parser
      * @param string $text
      * @return mixed
      * @internal param $text
      */
     private function parse($parser, $text = '')
     {
-        switch($parser) {
+        switch ($parser) {
             case 'wikipedia-api-post':
                 $endPoint = $this->params->get('api-endpoint', "https://en.wikipedia.org/w/api.php");
                 $text = $this->parseWikipediaApiPost($endPoint, $text);
@@ -167,15 +238,15 @@ class plgContentQlmarkdown extends JPlugin
 
         $ch = curl_init();
 
-        curl_setopt( $ch, CURLOPT_URL, $endPoint );
-        curl_setopt( $ch, CURLOPT_POST, true );
-        curl_setopt( $ch, CURLOPT_POSTFIELDS, http_build_query( $params ) );
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        curl_setopt($ch, CURLOPT_URL, $endPoint);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        $output = curl_exec( $ch );
-        curl_close( $ch );
+        $output = curl_exec($ch);
+        curl_close($ch);
 
-        $obj =  json_decode( $output );
+        $obj = json_decode($output);
         $text = isset($obj->parse->text->{'*'}) ? $obj->parse->text->{'*'} : $text;
         return $text;
     }
@@ -254,6 +325,18 @@ class plgContentQlmarkdown extends JPlugin
 
     /**
      * method to clear tags
+     * @param $objArticle
+     * @return mixed
+     */
+    private function clearTagsInArticle(&$objArticle)
+    {
+        if (isset($objArticle->text)) $objArticle->text = $this->clearTags($objArticle->text);
+        if (isset($objArticle->introtext)) $objArticle->introtext = $this->clearTags($objArticle->introtext);
+        if (isset($objArticle->fulltext)) $objArticle->fulltext = $this->clearTags($objArticle->fulltext);
+    }
+
+    /**
+     * method to clear tags
      * @param $str
      * @return mixed
      */
@@ -264,6 +347,28 @@ class plgContentQlmarkdown extends JPlugin
         $str = preg_replace('!<p>{' . $this->strCallStart . '}</p>!', '{' . $this->strCallStart . '}', $str);
         $this->debugPrintText($str);
         return $str;
+    }
+
+    /**
+     * method to clear tags
+     * @param $objArticle
+     * @return mixed
+     */
+    private function clearOffTagsInArticle(&$objArticle)
+    {
+        if (isset($objArticle->text)) $objArticle->text = $this->clearOffTags($objArticle->text);
+        if (isset($objArticle->introtext)) $objArticle->introtext = $this->clearOffTags($objArticle->introtext);
+        if (isset($objArticle->fulltext)) $objArticle->fulltext = $this->clearOffTags($objArticle->fulltext);
+    }
+
+    /**
+     * method to clear tags
+     * @param $str
+     * @return mixed
+     */
+    private function clearOffTags($str)
+    {
+        return str_replace($this->offTag, '', $str);
     }
 
     /**
