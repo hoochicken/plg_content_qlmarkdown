@@ -77,6 +77,8 @@ class plgContentQlmarkdown extends JPlugin
 
         //replace tags
         $this->replaceStartTagsInArticle($objArticle);
+
+        $this->stripUselessTagsInArticle($this->arrAttributesAvailable, $objArticle);
     }
 
     /**
@@ -458,10 +460,10 @@ class plgContentQlmarkdown extends JPlugin
 
         // get layout path
         $strPathLayout = $this->getLayoutPath($this->_type, $this->_name, $layout);
-        include $strPathLayout;
 
         // load into buffer, and return
         ob_start();
+        include $strPathLayout;
         $strHtml = ob_get_contents();
         ob_end_clean();
         return $strHtml;
