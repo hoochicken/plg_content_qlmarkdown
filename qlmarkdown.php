@@ -185,10 +185,6 @@ class plgContentQlmarkdown extends JPlugin
             $endpoint = !empty($this->arrReplace[$numKey]['endpoint']) ? $this->arrReplace[$numKey]['endpoint'] : $this->endpoint;
             $text = $this->parse($parser, $content[$numKey], $endpoint);
 
-            // for reasons obsolutely obscure, SOME tags are turned into html &lg; while others are NOT. something's rotten here ...
-            $text = str_replace('&lt;', '<', $text);
-            $text = str_replace('&gt;', '>', $text);
-
             $this->arrReplace[$numKey]['content'] = $text;
 
             //get html code
