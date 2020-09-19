@@ -47,12 +47,12 @@
                        description="PLG_CONTENT_QLMARKDOWN_PARSER_DESC"
                        label="PLG_CONTENT_QLMARKDOWN_PARSER_LABEL"
                        required="true"
+                       default="erusev-parsedown"
                         >
-                    <option value="">PLG_CONTENT_QLMARKDOWN_CHOOSE</option>
-                    <option value="wikipedia-api-post">Wikipedia API - (post)</option>
                     <option value="erusev-parsedown">erusev/parsedown</option>
                     <option value="michelf-php-markdown">michelf/php-markdown</option>
                     <option value="michelf-php-markdown-extra">michelf/php-markdown (extra)</option>
+                    <option value="wikipedia-api-post">Wikipedia API - (post)</option>
                 </field>
                 <field name="api-endpoint" type="text" default="https://en.wikipedia.org/w/api.php"
                        label="PLG_CONTENT_QLMARKDOWN_APIENDPOINT_LABEL"
