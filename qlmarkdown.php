@@ -23,7 +23,7 @@ class plgContentQlmarkdown extends JPlugin
     protected $offTag = '';
     protected $parser = '';
     protected $arrReplace = [];
-    protected $arrAttributesAvailable = ['class', 'id', 'style', 'type', 'title', 'layout',];
+    protected $arrAttributesAvailable = ['class', 'id', 'style', 'type', 'title', 'layout','parser'];
     public $params;
     private $boolDebug = false;
 
@@ -179,7 +179,8 @@ class plgContentQlmarkdown extends JPlugin
         foreach ($complete as $numKey => $strContent) {
             //get replacement array (written to class variable)
             $this->arrReplace[$numKey] = $this->getAttributes($this->arrAttributesAvailable, $attributes[$numKey]);
-            $text = $this->parse($this->parser, $content[$numKey]);
+            $parser = !empty($this->arrReplace[$numKey]['parser']) ? $this->arrReplace[$numKey] : $this->parser;
+            $text = $this->parse($parser, $content[$numKey]);
 
             // for reasons obsolutely obscure, SOME tags are turned into html &lg; while others are NOT. something's rotten here ...
             $text = str_replace('&lt;', '<', $text);
@@ -224,7 +225,7 @@ class plgContentQlmarkdown extends JPlugin
     {
         switch ($parser) {
             case 'wikipedia-api-post':
-                $endPoint = $this->params->get('api-endpoint', "https://en.wikipedia.org/w/api.php");
+                $endPoint = $this->params->get('apiendpoint', "https://en.wikipedia.org/w/api.php");
                 $text = $this->parseWikipediaApiPost($endPoint, $text);
                 break;
             case 'michelf-php-markdown':
@@ -236,6 +237,7 @@ class plgContentQlmarkdown extends JPlugin
             case 'erusev-parsedown':
             default:
                 $text = $this->parseErusevParsedown($text);
+                break;
         }
         return $text;
     }
