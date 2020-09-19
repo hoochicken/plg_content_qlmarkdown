@@ -22,8 +22,9 @@ class plgContentQlmarkdown extends JPlugin
     protected $strCallEnd = '/qlmarkdown';
     protected $offTag = '';
     protected $parser = '';
+    protected $endpoint = '';
     protected $arrReplace = [];
-    protected $arrAttributesAvailable = ['class', 'id', 'style', 'type', 'title', 'layout','parser'];
+    protected $arrAttributesAvailable = ['class', 'id', 'style', 'type', 'title', 'layout', 'parser', 'endpoint'];
     public $params;
     private $boolDebug = false;
 
@@ -42,6 +43,7 @@ class plgContentQlmarkdown extends JPlugin
 
         $this->offTag = '{' . $this->strCallStart . '-off}';
         $this->parser = $this->params->get('parser', 'erusev-parsedown');
+        $this->endpoint = $this->params->get('apiendpoint', 'https://en.wikipedia.org/w/api.php');
 
         $input = JFactory::getApplication()->input;
         $this->boolDebug = $input->getBool('ql_content_debug', false);
@@ -179,8 +181,9 @@ class plgContentQlmarkdown extends JPlugin
         foreach ($complete as $numKey => $strContent) {
             //get replacement array (written to class variable)
             $this->arrReplace[$numKey] = $this->getAttributes($this->arrAttributesAvailable, $attributes[$numKey]);
-            $parser = !empty($this->arrReplace[$numKey]['parser']) ? $this->arrReplace[$numKey] : $this->parser;
-            $text = $this->parse($parser, $content[$numKey]);
+            $parser = !empty($this->arrReplace[$numKey]['parser']) ? $this->arrReplace[$numKey]['parser'] : $this->parser;
+            $endpoint = !empty($this->arrReplace[$numKey]['endpoint']) ? $this->arrReplace[$numKey]['endpoint'] : $this->endpoint;
+            $text = $this->parse($parser, $content[$numKey], $endpoint);
 
             // for reasons obsolutely obscure, SOME tags are turned into html &lg; while others are NOT. something's rotten here ...
             $text = str_replace('&lt;', '<', $text);
@@ -205,27 +208,29 @@ class plgContentQlmarkdown extends JPlugin
      * parses markdown string as html
      * @param $parser
      * @param $objArticle
+     * @param string $endpoint
      * @return mixed
      * @internal param $text
      */
-    private function parseArticle($parser, &$objArticle) {
-        if (isset($objArticle->text)) $objArticle->text = $this->parse($parser, $objArticle->text);
-        if (isset($objArticle->introtext)) $objArticle->introtext = $this->parse($parser, $objArticle->introtext);
-        if (isset($objArticle->fulltext)) $objArticle->fulltext = $this->parse($parser, $objArticle->fulltext);
+    private function parseArticle($parser, &$objArticle, $endpoint = '') {
+        if (isset($objArticle->text)) $objArticle->text = $this->parse($parser, $objArticle->text, $endpoint);
+        if (isset($objArticle->introtext)) $objArticle->introtext = $this->parse($parser, $objArticle->introtext, $endpoint);
+        if (isset($objArticle->fulltext)) $objArticle->fulltext = $this->parse($parser, $objArticle->fulltext, $endpoint);
     }
 
     /**
      * parses markdown string as html
      * @param $parser
      * @param string $text
+     * @param string $endpoint
      * @return mixed
      * @internal param $text
      */
-    private function parse($parser, $text = '')
+    private function parse($parser, $text = '', $endpoint = '')
     {
         switch ($parser) {
             case 'wikipedia-api-post':
-                $endPoint = $this->params->get('apiendpoint', "https://en.wikipedia.org/w/api.php");
+                $endPoint = !empty($endpoint) ? $endpoint : $this->params->get('apiendpoint', "https://en.wikipedia.org/w/api.php");
                 $text = $this->parseWikipediaApiPost($endPoint, $text);
                 break;
             case 'michelf-php-markdown':

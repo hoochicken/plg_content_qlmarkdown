@@ -54,7 +54,7 @@
                     <option value="michelf-php-markdown-extra">michelf/php-markdown (extra)</option>
                     <option value="wikipedia-api-post">Wikipedia API - (post)</option>
                 </field>
-                <field name="api-endpoint" type="text" default="https://en.wikipedia.org/w/api.php"
+                <field name="apiendpoint" type="text" default="https://en.wikipedia.org/w/api.php"
                        label="PLG_CONTENT_QLMARKDOWN_APIENDPOINT_LABEL"
                        description="PLG_CONTENT_QLMARKDOWN_APIENDPOINT_DESC" />
                 <!--field name="jquery" type="radio"

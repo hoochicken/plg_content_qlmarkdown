@@ -18,6 +18,13 @@ Following parameters can be added:
 * id: css id
 * style: css style commands
 * title: NOT used in default template, but mae be you might need it in override
+* parsers: parser to be used, valid values are:
+    * erusev-parsedown (erusev/parsedown)
+    * michelf-php-markdown (michelf/php-markdown)
+    * michelf-php-markdown-extra (>michelf/php-markdown (extra))
+    * wikipedia-api-post (use wiki api fromt given endpoint)
+* apiendpoint: endpoint af api
 * layout: layout to be used, `default.php` ist used by default
-    * can be globally overridden in plugin param
-    * can be locally overridden in plugin call tag {'qlmarkdown class="some-other-layout"} ...<br />it will use the file `some-other-layout.php` in template folder `template/YOURTEMPLATE/html/plg_content_qlmarkdown/some-other-layout.php`  
+    * can be globally overridden in plugin param, e. g. with "some-other-layout"
+    * can be locally overridden in plugin call tag {'qlmarkdown class="some-other-layout"} ...
+    * if overridden: file `some-other-layout.php` in template folder `template/YOURTEMPLATE/html/plg_content_qlmarkdown/some-other-layout.php`  
