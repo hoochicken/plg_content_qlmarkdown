@@ -226,16 +226,20 @@ class plgContentQlmarkdown extends JPlugin
     {
         switch ($parser) {
             case 'wikipedia-api-post':
+            case 'Wikipedia API - (post)':
                 $endPoint = !empty($endpoint) ? $endpoint : $this->params->get('apiendpoint', "https://en.wikipedia.org/w/api.php");
                 $text = $this->parseWikipediaApiPost($endPoint, $text);
                 break;
             case 'michelf-php-markdown':
+            case 'michelf/php-markdown':
                 $text = $this->parseMichelfPhpMarkdown($text);
                 break;
             case 'michelf-php-markdown-extra':
+            case 'michelf/php-markdown-extra':
                 $text = $this->parseMichelfPhpMarkdownExtra($text);
                 break;
             case 'erusev-parsedown':
+            case 'erusev/parsedown':
             default:
                 $text = $this->parseErusevParsedown($text);
                 break;
