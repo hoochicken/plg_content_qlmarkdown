@@ -23,7 +23,7 @@ Following parameters can be added:
     * michelf-php-markdown (michelf/php-markdown)
     * michelf-php-markdown-extra (>michelf/php-markdown (extra))
     * wikipedia-api-post (use wiki api fromt given endpoint)
-* apiendpoint: endpoint af api
+* apiendpoint: endpoint af api, default: `https://en.wikipedia.org/w/api.php`
 * layout: layout to be used, `default.php` ist used by default
     * can be globally overridden in plugin param, e. g. with "some-other-layout"
     * can be locally overridden in plugin call tag {'qlmarkdown class="some-other-layout"} ...
