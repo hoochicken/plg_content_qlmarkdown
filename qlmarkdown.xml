@@ -57,16 +57,7 @@
                 <field name="api-endpoint" type="text" default="https://en.wikipedia.org/w/api.php"
                        label="PLG_CONTENT_QLMARKDOWN_APIENDPOINT_LABEL"
                        description="PLG_CONTENT_QLMARKDOWN_APIENDPOINT_DESC" />
-                <field name="global" type="radio"
-                       class="btn-group"
-                       default="0"
-                       label="PLG_CONTENT_QLMARKDOWN_GLOBAL_LABEL"
-                       description="PLG_CONTENT_QLMARKDOWN_GLOBAL_DESC"
-                >
-                    <option value="1">JYES</option>
-                    <option value="0">JNO</option>
-                </field>
-                <field name="jquery" type="radio"
+                <!--field name="jquery" type="radio"
                        class="btn-group"
                        default="0"
                        label="PLG_CONTENT_QLMARKDOWN_JQUERY_LABEL"
@@ -74,7 +65,7 @@
                 >
                     <option value="1">JYES</option>
                     <option value="0">JNO</option>
-                </field>
+                </field-->
                 <field name="layout" type="text" default="default"
                        label="PLG_CONTENT_QLMARKDOWN_LAYOUT_LABEL"
                        description="PLG_CONTENT_QLMARKDOWN_LAYOUT_DESC" />
@@ -149,6 +140,15 @@
                 </field>
             </fieldset>
             <fieldset name="context">
+                <field name="global" type="radio"
+                       class="btn-group"
+                       default="0"
+                       label="PLG_CONTENT_QLMARKDOWN_GLOBAL_LABEL"
+                       description="PLG_CONTENT_QLMARKDOWN_GLOBAL_DESC"
+                >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
                 <field name="contextWhitelist" type="textarea"
                        label="PLG_CONTENT_QLMARKDOWN_CONTEXTWHITELIST_LABEL"
                        description="PLG_CONTENT_QLMARKDOWN_CONTEXTWHITELIST_DESC"
