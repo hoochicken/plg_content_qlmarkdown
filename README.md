@@ -17,7 +17,7 @@ Following parameters can be added:
 * class: css classe
 * id: css id
 * style: css style commands
-* title: NOT used in default template, but mae be you might need it in override
+* title: NOT used in default template, but maybe you might need it in override
 * parsers: parser to be used, valid values are:
     * erusev-parsedown (erusev/parsedown)
     * michelf-php-markdown (michelf/php-markdown)
