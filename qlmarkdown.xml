@@ -6,7 +6,7 @@
     <copyright>Copyright (C) 2026 ql.de All rights reserved.</copyright>
     <authorEmail>mareike.riegel@ql.de</authorEmail>
     <authorUrl>http://ql.de/</authorUrl>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <description>PLG_CONTENT_QLMARKDOWN_DESCRIPTION</description>
     <files>
@@ -57,15 +57,6 @@
                 <field name="apiendpoint" type="text" default="https://en.wikipedia.org/w/api.php"
                        label="PLG_CONTENT_QLMARKDOWN_APIENDPOINT_LABEL"
                        description="PLG_CONTENT_QLMARKDOWN_APIENDPOINT_DESC" />
-                <!--field name="jquery" type="radio"
-                       class="btn-group"
-                       default="0"
-                       label="PLG_CONTENT_QLMARKDOWN_JQUERY_LABEL"
-                       description="PLG_CONTENT_QLMARKDOWN_JQUERY_DESC"
-                >
-                    <option value="1">JYES</option>
-                    <option value="0">JNO</option>
-                </field-->
                 <field name="layout" type="text" default="default"
                        label="PLG_CONTENT_QLMARKDOWN_LAYOUT_LABEL"
                        description="PLG_CONTENT_QLMARKDOWN_LAYOUT_DESC" />

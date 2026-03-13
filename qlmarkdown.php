@@ -7,6 +7,7 @@
  */
 
 //no direct access
+use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Michelf\Markdown;
 use Michelf\MarkdownExtra;
@@ -46,7 +47,7 @@ class plgContentQlmarkdown extends CMSPlugin
         $this->parser = $this->params->get('parser', 'erusev-parsedown');
         $this->endpoint = $this->params->get('apiendpoint', 'https://en.wikipedia.org/w/api.php');
 
-        $input = JFactory::getApplication()->input;
+        $input = Factory::getApplication()->input;
         $this->boolDebug = $input->getBool('ql_content_debug', false);
 
         //if no plg tag in article => ignore
@@ -511,7 +512,7 @@ class plgContentQlmarkdown extends CMSPlugin
         $arrStyle = [];
         $arrStyle[] = '.qlmarkdown {color:' . $strFontColor . '; border:' . $numBorderWidth . 'px ' . $strBorderType . ' ' . $strBorderColor . '; padding:' . $numPadding . 'px; background:' . $strBackgroundColor . ';}';
         $strStyle = implode("\n", $arrStyle);
-        JFactory::getDocument()->addStyleDeclaration($strStyle);
+        Factory::getDocument()->addStyleDeclaration($strStyle);
     }
 
     /**
@@ -519,11 +520,9 @@ class plgContentQlmarkdown extends CMSPlugin
      */
     private function includeScripts()
     {
-        if (1 == $this->params->get('jquery')) {
-            JHtml::_('jquery.framework');
-        }
-        JHtml::_('script', JUri::root() . 'media/plg_content_qlmarkdown/js/qlmarkdown.js');
-        JHtml::_('stylesheet', JUri::root() . 'media/plg_content_qlmarkdown/css/qlmarkdown.css');
+        $document = Factory::getDocument();
+        $document->addScript('/media/plg_content_qlmarkdown/js/qlmarkdown.js');
+        $document->addStyleSheet('media/plg_content_qlmarkdown/css/qlmarkdown.css');
     }
 
     /**
