@@ -7,6 +7,7 @@
  */
 
 //no direct access
+use Joomla\CMS\Plugin\CMSPlugin;
 use Michelf\Markdown;
 use Michelf\MarkdownExtra;
 
@@ -15,7 +16,7 @@ defined('_JEXEC') or die ('Restricted Access');
 jimport('joomla.plugin.plugin');
 
 
-class plgContentQlmarkdown extends JPlugin
+class plgContentQlmarkdown extends CMSPlugin
 {
 
     protected $strCallStart = 'qlmarkdown';
